@@ -4,7 +4,7 @@ require '../config/connect.php';
 $sql = "SELECT * "  .
  "FROM tables t " .
  "LEFT JOIN orders o ON t.tbl_id = o.tbl_id ".
- "and o.ord_status = 'unpaid';";
+ "and  o.ord_status = 'unpaid';";
 
 $result = $conn->query($sql);
 $data = [];
