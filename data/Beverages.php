@@ -6,13 +6,13 @@ $request_method = $_SERVER["REQUEST_METHOD"];
 
 //GET: Get all beverages
 if ($request_method == "GET") {
-    if(isset($_GET["bev_name"])){
-    $tbl_id = intval($_GET['tbl_id']);
-        $sql = "SELECT * FROM tables WHERE tbl_id = ?";
+    if (isset($_GET["bev_name"])) {
+        $bev_name = "%" . $_GET["bev_name"] . "%"; 
+        $sql = "SELECT * FROM beverages WHERE bev_name LIKE ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $tbl_id);
+        $stmt->bind_param("s", $bev_name);
     } else {
-        $sql = "SELECT * FROM tables";
+        $sql = "SELECT * FROM beverages";
         $stmt = $conn->prepare($sql);
     }
 
@@ -29,12 +29,9 @@ if ($request_method == "GET") {
     $conn->close();
 }
 
-
-//POST: Update table
-
 //Put new beverage
 if ($request_method == "PUT") {
-    if(isset($_PUT)){
+    if(isset($_PUT["bev_name"])){
         $bev_id = $_PUT["bev_id"];
         $price_id = $_PUT["price_id"];
         $bev_name = $_PUT["bev_name"];

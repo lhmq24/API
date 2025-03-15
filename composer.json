@@ -1,0 +1,17 @@
+{
+    "name": "admin/api",
+    "autoload": {
+        "psr-4": {
+            "Admin\\Api\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "lhmq24",
+            "email": "quancvl1975@gmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.11"
+    }
+}
