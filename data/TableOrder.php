@@ -1,10 +1,12 @@
 <?php
 require '../config/connect.php';
 
-$sql = "SELECT * "  .
- "FROM tables t " .
- "LEFT JOIN orders o ON t.tbl_id = o.tbl_id ".
- "and  o.ord_status = 'unpaid';";
+$sql = "SELECT t.tbl_id, t.floor_number, t.tbl_number, t.tbl_capacity, t.tbl_status, t.tbl_image,
+               o.ord_id, o.ord_total_price, o.ord_status, o.ord_created_at, o.ord_paid_at
+        FROM tables t
+        LEFT JOIN orders o 
+        ON t.tbl_id = o.tbl_id 
+        AND o.ord_status = 'unpaid'";
 
 $result = $conn->query($sql);
 $data = [];
@@ -17,7 +19,8 @@ if ($result->num_rows > 0) {
                 "floor_number" => $row["floor_number"],
                 "tbl_number" => $row["tbl_number"],
                 "tbl_capacity" => $row["tbl_capacity"],
-                "tbl_status" => $row["tbl_status"]
+                "tbl_status" => $row["tbl_status"],
+                "tbl_image" => $row["tbl_image"]
             ],
             "order" => [
                 "ord_id" => $row["ord_id"],
