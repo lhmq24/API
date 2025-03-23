@@ -5,8 +5,9 @@ include_once '../config/connect.php';
 $request_method = $_SERVER["REQUEST_METHOD"];
 
 if ($request_method == "GET") {
-    if (isset($_GET["tbl_id"])) {
-        $tbl_id = $_GET["tbl_id"];
+    //TH 1: Lay danh sach nuoc uong trong order item theo ban (Khong co floor_number)
+    if(count($_GET) == 1 && isset($_GET["tbl_number"])) {
+        $tbl_number = $_GET["tbl_number"];
 
         $sql = "SELECT 
                     b.bev_id, b.bev_name, 
@@ -14,11 +15,29 @@ if ($request_method == "GET") {
                 FROM order_items oi
                 JOIN beverages b ON oi.bev_id = b.bev_id
                 JOIN orders o ON oi.ord_id = o.ord_id
-                WHERE o.tbl_id = ? AND o.ord_status = 0";
+                WHERE o.tbl_number = ? AND  o.ord_status = 0";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $tbl_id);
-    } 
+        $stmt->bind_param("i", $tbl_number);
+    } elseif (count($_GET) == 2 && isset($_GET["tbl_number"]) && isset($_GET["floor_number"])){
+        //TH 2: Lay danh sach nuoc uong trong order item theo ban (Co floor_number)
+
+        $floor_number = $_GET["floor_number"];
+        $tbl_number = $_GET["tbl_number"];
+
+        $sql = "SELECT 
+            b.*,
+            oi.*
+        FROM order_items oi
+        JOIN orders o ON oi.ord_id = o.ord_id
+        JOIN tables t ON o.tbl_id = t.tbl_id
+        JOIN beverages b ON oi.bev_id = b.bev_id
+        WHERE t.floor_number = ? AND t.tbl_number = ? AND  o.ord_status = 0
+        ORDER BY o.ord_id";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $floor_number, $tbl_number);
+    }
 
     $stmt->execute();
     $result = $stmt->get_result();
@@ -44,4 +63,5 @@ if ($request_method == "GET") {
     $stmt->close();
     $conn->close();
 }
+
 ?>
